@@ -151,7 +151,7 @@ def check_prices():
 
         browser.close()
 
-   all_flights.sort(key=lambda x: x["price"])
+    all_flights.sort(key=lambda x: x["price"])
 
     # Build by_date dict
     from collections import defaultdict
