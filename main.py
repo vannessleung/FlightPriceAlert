@@ -157,6 +157,16 @@ def check_prices():
     for f in all_flights[:5]:
         print(f)
 
+    print("\n===== TOP 3 CHEAPEST PER RETURN DATE =====")
+    from collections import defaultdict
+    by_date = defaultdict(list)
+    for f in all_flights:
+        by_date[f["return_date"]].append(f)
+    for d in sorted(by_date):
+        print(f"\n  {d}:")
+        for f in by_date[d][:3]:
+            print(f"    £{f['price']} — {f['airline']} ({f['stops'] or 'direct'})")
+
     print("\n===== CHEAPEST PER RETURN DATE =====")
     seen = {}
     for f in all_flights:
