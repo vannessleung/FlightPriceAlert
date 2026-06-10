@@ -122,7 +122,7 @@ def check_price():
                     "stop" not in line.lower() and
                     "–" not in line and
                     "CO2" not in line and
-                    not number_pattern.match(line) and
+                    not line.isdigit() and
                     len(line) < 60
                 ):
                     if flight["airline"] is None:
