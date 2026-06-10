@@ -72,6 +72,7 @@ def check_price():
                 "route": None,
                 "stops": None,
                 "duration": None,
+                "transfer": None,
                 "price": None
             }
 
@@ -95,11 +96,17 @@ def check_price():
 
                 # 3. DURATION
                 if "hrs" in line:
-                    flight["duration"] = line
-                    continue
+                    transfer_match = re.search(r"(\d+\s*hrs\s*\d+\s*min)\s*([A-Z]{3})", line)
+                    if transfer_match:
+                        flight["transfer"] = line
+                        continue
+                    total_match = re.fullmatch(r"\d+\s*hrs\s*\d+\s*min", line)
+                    if total_match:
+                        flight["duration"] = line
+                        continue
 
                 # 4. ROUTE
-                if "LHR" in line or "HND" in line or "–" in line:
+                if "LHR" and "–" in line:
                     flight["route"] = line
                     continue
 
@@ -115,6 +122,7 @@ def check_price():
                     "stop" not in line.lower() and
                     "–" not in line and
                     "CO2" not in line and
+                    not number_pattern.match(line) and
                     len(line) < 60
                 ):
                     if flight["airline"] is None:
