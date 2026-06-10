@@ -23,10 +23,3 @@ jobs:
 
       - name: Run script
         run: python main.py
-
-      - name: Upload debug file
-        uses: actions/upload-artifact@v4
-        with:
-          name: debug-page
-          path: page.txt
-      
