@@ -159,7 +159,7 @@ def check_prices():
     by_date = defaultdict(list)
     for f in all_flights:
         by_date[f["return_date"]].append(f)
-    PRICE_ALERT = 2300
+    PRICE_ALERT = 1700
             
     with open("results.txt", "w", encoding="utf-8") as f:
         # Alert check
