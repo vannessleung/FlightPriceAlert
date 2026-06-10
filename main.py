@@ -16,5 +16,9 @@ def check_price():
         prices = re.findall(r'£\d{1,3}(?:,\d{3})*', text)
 
         print(prices)
+        print("prices are printed")
 
         browser.close()
+        
+with open("page.txt", "w", encoding="utf-8") as f:
+    f.write(text)
