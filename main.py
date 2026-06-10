@@ -23,6 +23,33 @@ def check_price():
             print("\n--- CARD", i, "---")
             print(cards.nth(i).inner_text())
 
+        lines = text.splitlines()
+
+        start = 0
+        
+        for i, line in enumerate(lines):
+            if "Fetching results" in line:
+                start = i
+                break
+        flihgt_lines = lines[start:]
+
+        cards = []
+        current = []
+        for line in flight_lines:
+            current.append(line)
+            if line.startswith("Avoids"):
+                cards.append(current)
+                current = []
+        if line.startswith("£"):
+            print("PRICES:", line)
+        if "-" in line and len(line)<10:
+            print("Airport:", line)
+        if "hrs" in line:
+            print("Flight duration:", line)
+        if "stop" in line:
+            print(line)
+        
+
         print(prices)
         print("prices are printed")
 
