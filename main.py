@@ -104,4 +104,6 @@ def check_price():
 
         browser.close()
 
+    print(flights)
+
 check_price()
