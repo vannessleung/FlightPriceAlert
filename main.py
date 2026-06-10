@@ -11,14 +11,7 @@ def extract_price(line):
     return None
 
 
-def check_price(url):
-
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True)
-        page = browser.new_page()
-
-        page.goto(url)
-        page.wait_for_timeout(10000)
+def check_price(page):
 
         # =========================
         # 1. GET PAGE TEXT
