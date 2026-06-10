@@ -98,8 +98,6 @@ def check_price():
             flights.append(flight)
         
 
-        print(prices)
-        print("prices are printed")
 
         with open("page.txt", "w", encoding="utf-8") as f:
             f.write(text)
