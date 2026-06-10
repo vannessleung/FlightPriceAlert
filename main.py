@@ -17,8 +17,9 @@ RETURN_DATE_END   = date(2027, 1, 24)
 # URL GENERATION
 # ================================
 def make_url(return_date_str: str) -> str:
-    padding = (4 - len(ORIGINAL_TFS) % 4) % 4
-    decoded = base64.urlsafe_b64decode(ORIGINAL_TFS + "=" * padding)
+    tfs_only = ORIGINAL_TFS.split("&")[0]  # strip anything after & just in case
+    padding = (4 - len(tfs_only) % 4) % 4
+    decoded = base64.urlsafe_b64decode(tfs_only + "=" * padding)
     updated = decoded.replace(ORIGINAL_RETURN_DATE.encode(), return_date_str.encode())
     tfs = base64.urlsafe_b64encode(updated).decode().rstrip("=")
     return f"https://www.google.com/travel/flights/search?tfs={tfs}&tfu=EgoIABAAGAAgAigB&hl=en-GB&gl=GB"
