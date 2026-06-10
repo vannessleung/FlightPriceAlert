@@ -3,7 +3,16 @@ from playwright.sync_api import sync_playwright
 
 URL = "https://www.google.com/travel/flights/search?tfs=CBwQAhojEgoyMDI2LTEyLTI0agcIARIDTEhScgwIAxIIL20vMDdkZmsaIxIKMjAyNy0wMS0yMWoMCAMSCC9tLzA3ZGZrcgcIARIDTEhSQAFAAUABSAFwAYIBCwj___________8BmAEB&tfu=EgoIABAAGAAgAigB&hl=en-GB&gl=GB"
 
+
+def extract_price(line):
+    match = re.search(r'£\d{1,3}(?:,\d{3})*', line)
+    if match:
+        return int(match.group().replace("£", "").replace(",", ""))
+    return None
+
+
 def check_price():
+
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
@@ -11,68 +20,100 @@ def check_price():
         page.goto(URL)
         page.wait_for_timeout(10000)
 
+        # =========================
+        # 1. GET PAGE TEXT
+        # =========================
         text = page.inner_text("body")
+        lines = [l.strip() for l in text.splitlines() if l.strip()]
 
-        cards = page.locator('[role="listitem"]')
+        # remove UI noise
+        cleaned = []
+        for l in lines:
+            if any(x in l for x in [
+                "Skip to main content",
+                "Fetching results",
+                "Checking prices",
+                "Searching",
+                "Other departing flights"
+            ]):
+                continue
+            cleaned.append(l)
 
-        print("Cards found:", cards.count())
+        # =========================
+        # 2. SPLIT INTO CARDS
+        # =========================
+        cards = []
+        current = []
 
-        for i in range(min(cards.count(), 10)):
-            print("\n--- CARD", i, "---")
-            print(cards.nth(i).inner_text())
+        for line in cleaned:
+            current.append(line)
 
-        lines = text.splitlines()
+            if "Avoid" in line or "trees absorb" in line:
+                cards.append(current)
+                current = []
 
-        start = 0
-        
-        for i, line in enumerate(cards):
+        # =========================
+        # 3. PARSE EACH CARD
+        # =========================
+        flights = []
 
-            price_match = re.search(r'£\d{1,3}(?:,\d{3})*', line)
+        for card in cards:
 
-            if price_match:
-        
-                flight["price"] = int(price_match.group().replace("£", "").replace(",", ""))
+            flight = {
+                "airline": None,
+                "route": None,
+                "stops": None,
+                "duration": None,
+                "price": None
+            }
 
-            elif "hrs" in line:
+            for line in card:
 
-                flight["duration"] = line
+                # price
+                price = extract_price(line)
+                if price:
+                    flight["price"] = price
 
-            elif "LHR" in line or "HND" in line or "–" in line:
+                # duration
+                elif "hrs" in line:
+                    flight["duration"] = line
 
-                flight["route"] = line
+                # route
+                elif "LHR" in line or "HND" in line or "–" in line:
+                    flight["route"] = line
 
-            elif "stop" in line.lower():
+                # stops
+                elif "stop" in line.lower():
+                    flight["stops"] = line
 
-                flight["stops"] = line
+                # airline (best-effort heuristic)
+                elif (
+                    "£" not in line and
+                    "hrs" not in line and
+                    "stop" not in line.lower() and
+                    "–" not in line and
+                    "CO2" not in line and
+                    len(line) < 50
+                ):
+                    if flight["airline"] is None:
+                        flight["airline"] = line
 
-            elif (
+            flights.append(flight)
 
-                "£" not in line and
-        
-                "hrs" not in line and
+        # =========================
+        # 4. OUTPUT RESULTS
+        # =========================
+        flights = [f for f in flights if f["price"] is not None]
 
-                "stop" not in line.lower() and
+        flights.sort(key=lambda x: x["price"])
 
-                "–" not in line and
+        print("\n===== ALL FLIGHTS =====")
+        for f in flights:
+            print(f)
 
-                "CO2" not in line and
-
-                len(line) < 40
-
-            ):
-
-                if flight["airline"] is None:
-
-                    flight["airline"] = line
-
-# 👇 THIS is where it should go
-
-        print(flight)
-
-        flights.append(flight)
-
-        with open("page.txt", "w", encoding="utf-8") as f:
-            f.write(text)
+        if flights:
+            print("\n===== CHEAPEST =====")
+            print(flights[0])
 
         browser.close()
 
