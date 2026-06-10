@@ -179,16 +179,18 @@ with sync_playwright() as p:
         print("="*50)
 
         page.goto(BASE_URL)
-        page.wait_for_timeout(2000)
+        page.wait_for_timeout(3000)
 
-        # open return date picker (robust way)
-        page.click('div[data-value="2027-01-18"]')
+        # open return picker
+        page.locator('input[aria-label="Return"]').first.click()
 
-        # select date using stable attribute
-        page.click(f'div[data-value="{date}"]')
+        page.wait_for_timeout(1000)
 
+        # select return date (forced click avoids overlay issues)
+        page.locator(f'div[data-value="{date}"]').first.click(force=True)
+        
         page.wait_for_timeout(5000)
-
+        
         flights = check_price(page)
 
         if not flights:
