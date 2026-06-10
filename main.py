@@ -15,6 +15,14 @@ def check_price():
 
         prices = re.findall(r'£\d{1,3}(?:,\d{3})*', text)
 
+        cards = page.locator('[role="listitem"]')
+
+        print("Cards found:", cards.count())
+
+        for i in range(min(cards.count(), 10)):
+            print("\n--- CARD", i, "---")
+            print(cards.nth(i).inner_text())
+
         print(prices)
         print("prices are printed")
 
