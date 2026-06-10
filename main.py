@@ -67,7 +67,6 @@ def check_price():
 
             flight = {
                 "airline": None,
-                "airline": None,
                 "departure": None,
                 "arrival": None,
                 "route": None,
@@ -118,12 +117,12 @@ def check_price():
                     "CO2" not in line and
                     len(line) < 60
                 ):
-                    if flight["airline"] is None:
-                        flight["airline"] = line
+                if flight["airline"] is None:
+                    flight["airline"] = line
 
-                        flights.append(flight)
+                    flights.append(flight)
 
-                with open("page.txt", "w", encoding="utf-8" as f:
+                with open("page.txt", "w", encoding="utf-8") as f:
                     f.write(text)
 
         # =========================
