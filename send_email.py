@@ -15,7 +15,7 @@ def send_email(body):
     msg = MIMEMultipart()
     msg["From"]    = sender
     msg["To"]      = receiver
-    msg["Subject"] = "✈️ Daily Flight Prices: London → Tokyo"
+    msg["Subject"] = "Weekly Flight Prices Update"
 
     msg.attach(MIMEText(body, "plain"))
 
