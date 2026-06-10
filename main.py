@@ -40,63 +40,63 @@ def check_price():
             if line.startswith("Avoids"):
                 cards.append(current)
                 current = []
-for card in cards:
+        for card in cards:
 
-    flight = {
+            flight = {
 
-        "airline": None,
+                "airline": None,
 
-        "route": None,
+                "route": None,
 
-        "stops": None,
+                "stops": None,
 
-        "duration": None,
+                "duration": None,
 
-        "price": None
+                "price": None
 
-    }
+            }
 
-    for i, line in enumerate(card):
+            for i, line in enumerate(card):
 
-        if "£" in line:
+                if "£" in line:
 
-            flight["price"] = int(line.replace("£", "").replace(",", ""))
+                    flight["price"] = int(line.replace("£", "").replace(",", ""))
 
-        elif "hrs" in line:
+                elif "hrs" in line:
 
-            flight["duration"] = line
+                    flight["duration"] = line
 
-        elif "LHR" in line or "HND" in line or "–" in line:
+                elif "LHR" in line or "HND" in line or "–" in line:
+        
+                    flight["route"] = line
 
-            flight["route"] = line
+                elif "stop" in line.lower():
 
-        elif "stop" in line.lower():
-
-            flight["stops"] = line
+                    flight["stops"] = line
 
         # airline heuristic (important)
 
-        elif (
+                elif (
 
-            "£" not in line and
+                    "£" not in line and
 
-            "hrs" not in line and
+                    "hrs" not in line and
 
-            "stop" not in line.lower() and
+                    "stop" not in line.lower() and
 
-            "–" not in line and
+                    "–" not in line and
 
-            "CO2" not in line and
+                    "CO2" not in line and
 
-            len(line) < 40
+                    len(line) < 40
 
-        ):
+                ):
 
-            if flight["airline"] is None:
+                    if flight["airline"] is None:
 
-                flight["airline"] = line
+                        flight["airline"] = line
 
-    flights.append(flight)
+            flights.append(flight)
         
 
         print(prices)
