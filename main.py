@@ -158,8 +158,12 @@ def check_prices():
     by_date = defaultdict(list)
     for f in all_flights:
         by_date[f["return_date"]].append(f)
-
+    PRICE_ALERT = 1700
+            
     with open("results.txt", "w", encoding="utf-8") as f:
+        if all_flights and all_flights[0]["price"] < PRICE_ALERT:
+            f.write(f"🚨 OH MY GOD WE NEED TO FLY NOW 🚨\n")
+            f.write(f"Cheapest flight is £{all_flights[0]['price']} — below your £{PRICE_ALERT} threshold!\n\n")
         f.write("===== TOP 5 CHEAPEST ACROSS ALL DATES =====\n")
         for flight in all_flights[:5]:
             f.write(f"£{flight['price']} — {flight['airline']} ({flight['stops'] or 'direct'}) | Return: {flight['return_date']}\n")
@@ -177,6 +181,7 @@ def check_prices():
             seen[f["return_date"]] = f
     for d in sorted(seen):
         print(f"  {d}: £{seen[d]['price']} — {seen[d]['airline']}")
+    
 
 
 check_prices()
