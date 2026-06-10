@@ -122,8 +122,6 @@ def check_price():
 
             flights.append(flight)
 
-                with open("page.txt", "w", encoding="utf-8") as f:
-                    f.write(text)
 
         # =========================
         # 4. OUTPUT RESULTS
@@ -139,6 +137,9 @@ def check_price():
         if flights:
             print("\n===== CHEAPEST =====")
             print(flights[0])
+
+        with open("page.txt", "w", encoding="utf-8") as f:
+            f.write(text)
 
         browser.close()
 
