@@ -106,7 +106,7 @@ def check_price():
                         continue
 
                 # 4. ROUTE
-                if "LHR" and "–" in line:
+                if "LHR" in line and "–" in line:
                     flight["route"] = line
                     continue
 
@@ -123,6 +123,8 @@ def check_price():
                     "–" not in line and
                     "CO2" not in line and
                     not line.isdigit() and
+                    not re.match(r"\d{2}:\d{2}", line) and
+                    not re.match(r"\d{2}:\d{2}\+\d", line) and
                     len(line) < 60
                 ):
                     if flight["airline"] is None:
