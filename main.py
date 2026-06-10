@@ -13,8 +13,6 @@ def check_price():
 
         text = page.inner_text("body")
 
-        prices = re.findall(r'£\d{1,3}(?:,\d{3})*', text)
-
         cards = page.locator('[role="listitem"]')
 
         print("Cards found:", cards.count())
@@ -35,6 +33,7 @@ def check_price():
 
         cards = []
         current = []
+        flights = []
         for line in flight_lines:
             current.append(line)
             if line.startswith("Avoids"):
@@ -58,9 +57,9 @@ def check_price():
 
             for i, line in enumerate(card):
 
-                if "£" in line:
-
-                    flight["price"] = int(line.replace("£", "").replace(",", ""))
+                price_match = re.search(r'£\d{1,3}(?:,\d{3})*', line)
+                if price_match:
+                    flight["price"] = int(price_match.group().replace("£", "").replace(",", ""))
 
                 elif "hrs" in line:
 
