@@ -9,7 +9,7 @@ def check_price():
         page = browser.new_page()
 
         page.goto(URL)
-        page.wait_for_timeout(10000)  # wait for results
+        page.wait_for_timeout(10000)
 
         text = page.content()
 
@@ -18,7 +18,9 @@ def check_price():
         print(prices)
         print("prices are printed")
 
+        with open("page.txt", "w", encoding="utf-8") as f:
+            f.write(text)
+
         browser.close()
-        
-with open("page.txt", "w", encoding="utf-8") as f:
-    f.write(text)
+
+check_price()
