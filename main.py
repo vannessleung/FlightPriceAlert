@@ -1,7 +1,7 @@
 import re
 from playwright.sync_api import sync_playwright
 
-URL = "https://www.google.com/travel/flights/search?tfs=CBwQAhojEgoyMDI2LTEyLTI0agcIARIDTEhScgwIAxIIL20vMDdkZmsaIxIKMjAyNy0wMS0yMWoMCAMSCC9tLzA3ZGZrcgcIARIDTEhSQAFAAUABSAFwAYIBCwj___________8BmAEB&tfu=EgoIABAAGAAgAigB&hl=en-GB&gl=GB"
+BASE_URL = "https://www.google.com/travel/flights/search?tfs=CBwQAhosEgoyMDI2LTEyLTI0KAFgsAlqBwgBEgNMSFJyDAgDEggvbS8wN2Rma5AB6AIaLBIKMjAyNy0wMS0xOCgBYLAJagwIAxIIL20vMDdkZmtyBwgBEgNMSFKQAegCQAFAAUABSAFwAYIBCwj___________8BmAEB&tfu=EggIAhABIAIoAyIA&hl=en-GB&gl=GB&curr=GBP"
 
 
 def extract_price(line):
@@ -11,13 +11,13 @@ def extract_price(line):
     return None
 
 
-def check_price():
+def check_price(url):
 
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
 
-        page.goto(URL)
+        page.goto(url)
         page.wait_for_timeout(10000)
 
         # =========================
@@ -153,5 +153,59 @@ def check_price():
 
         browser.close()
 
+        return flights
 
 check_price()
+
+return_dates = [
+    "2027-01-18",
+    "2027-01-19",
+    "2027-01-20",
+    "2027-01-21",
+    "2027-01-22",
+    "2027-01-23",
+    "2027-01-24"
+]
+
+results = []
+
+with sync_playwright() as p:
+    browser = p.chromium.launch(headless=True)
+    page = browser.new_page()
+
+    for date in return_dates:
+
+        print("\n" + "="*50)
+        print(f"Searching return date: {date}")
+        print("="*50)
+
+        page.goto(BASE_URL)
+        page.wait_for_timeout(2000)
+
+        # open return date picker (robust way)
+        page.get_by_label("Return").click()
+
+        # select date using stable attribute
+        page.click(f'div[data-value="{date}"]')
+
+        page.wait_for_timeout(5000)
+
+        flights = check_price(page)
+
+        if not flights:
+            print("No flights found")
+            continue
+
+        cheapest = flights[0]
+
+        print("Cheapest flight:")
+        print(cheapest)
+
+        results.append({
+            "return_date": date,
+            "price": cheapest["price"],
+            "duration": cheapest["duration"],
+            "stops": cheapest["stops"]
+        })
+
+    browser.close()
