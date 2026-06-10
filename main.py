@@ -73,38 +73,55 @@ def check_price():
                 "price": None
             }
 
+            time_pattern = re.compile(r"\d{2}:\d{2}")
+
             for line in card:
 
-                # price
+                # 1. PRICE
                 price = extract_price(line)
                 if price:
                     flight["price"] = price
+                    continue
 
-                # duration
-                elif "hrs" in line:
+                # 2. TIME (this is the key fix)
+                if time_pattern.fullmatch(line):
+                    if "departure" not in flight:
+                        flight["departure"] = line
+                    else:
+                        flight["arrival"] = line
+                    continue
+
+                # 3. DURATION
+                if "hrs" in line:
                     flight["duration"] = line
+                    continue
 
-                # route
-                elif "LHR" in line or "HND" in line or "–" in line:
+                # 4. ROUTE
+                if "LHR" in line or "HND" in line or "–" in line:
                     flight["route"] = line
+                    continue
 
-                # stops
-                elif "stop" in line.lower():
+                # 5. STOPS
+                if "stop" in line.lower():
                     flight["stops"] = line
+                    continue
 
-                # airline (best-effort heuristic)
-                elif (
+                # 6. AIRLINE (ONLY AFTER EVERYTHING ELSE)
+                if (
                     "£" not in line and
                     "hrs" not in line and
                     "stop" not in line.lower() and
                     "–" not in line and
                     "CO2" not in line and
-                    len(line) < 50
+                    len(line) < 60
                 ):
                     if flight["airline"] is None:
                         flight["airline"] = line
 
-            flights.append(flight)
+                        flights.append(flight)
+
+                with open("page.txt", "w", encoding="utf-8" as f:
+                    f.write(text)
 
         # =========================
         # 4. OUTPUT RESULTS
