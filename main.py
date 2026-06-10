@@ -155,7 +155,6 @@ def check_price(url):
 
         return flights
 
-check_price()
 
 return_dates = [
     "2027-01-18",
