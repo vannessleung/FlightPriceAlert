@@ -6,7 +6,7 @@ from playwright.sync_api import sync_playwright
 # ================================
 # CONFIG
 # ================================
-ORIGINAL_TFS = "CBwQAhojEgoyMDI2LTEyLTI0agcIARIDTEhScgwIAxIIL20vMDdkZmsaIxIKMjAyNy0wMS0yMWoMCAMSCC9tLzA3ZGZrcgcIARIDTEhSQAFAAUABSAFwAYIBCwj___________8BmAEB"
+ORIGINAL_TFS = "CBwQAhoxEgoyMDI2LTEyLTI0KAFgqApqDAgDEggvbS8wNGpwbHIMCAMSCC9tLzAzaDY0kAGGAxoxEgoyMDI3LTAxLTIxKAFgqApqDAgDEggvbS8wM2g2NHIMCAMSCC9tLzA0anBskAGGA0ABQAFAAUgBcAGCAQsI____________AZgBAQ&tfu=EgoIABAAGAAgAigB"
 ORIGINAL_RETURN_DATE = "2027-01-21"
 
 RETURN_DATE_START = date(2027, 1, 18)
