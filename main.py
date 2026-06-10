@@ -26,7 +26,7 @@ def check_price():
         start = 0
         
         for i, line in enumerate(lines):
-            if "Fetching results" in line:
+            if "Sorted by" in line:
                 start = i
                 break
         flight_lines = lines[start:]
@@ -95,6 +95,8 @@ def check_price():
 
                         flight["airline"] = line
 
+                print(flight)
+
             flights.append(flight)
         
 
@@ -104,6 +106,5 @@ def check_price():
 
         browser.close()
 
-    print(flights)
 
 check_price()
