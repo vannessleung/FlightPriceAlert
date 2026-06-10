@@ -11,7 +11,7 @@ def check_price():
         page.goto(URL)
         page.wait_for_timeout(10000)
 
-        text = page.content()
+        text = page.inner_text("body")
 
         prices = re.findall(r'£\d{1,3}(?:,\d{3})*', text)
 
