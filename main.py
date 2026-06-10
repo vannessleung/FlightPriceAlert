@@ -1,3 +1,4 @@
+import re
 from playwright.sync_api import sync_playwright
 
 URL = "https://www.google.com/travel/flights/search?tfs=CBwQAhojEgoyMDI2LTEyLTI0agcIARIDTEhScgwIAxIIL20vMDdkZmsaIxIKMjAyNy0wMS0yMWoMCAMSCC9tLzA3ZGZrcgcIARIDTEhSQAFAAUABSAFwAYIBCwj___________8BmAEB&tfu=EgoIABAAGAAgAigB&hl=en-GB&gl=GB"
@@ -12,21 +13,8 @@ def check_price():
 
         text = page.content()
 
-        # VERY simple first attempt (we refine later)
-        prices = []
+        prices = re.findall(r'£\d{1,3}(?:,\d{3})*', text)
 
-        for word in text.split():
-            if "£" in word:
-                prices.append(word)
+        print(prices)
 
-        if not prices:
-            print("NO PRICE FOUND - scraper may be broken")
-            return
-
-        print("Found prices:", prices)
-
-        cheapest = min(prices, key=lambda x: int(x.replace("£","").replace(",","")))
-        print("Cheapest:", cheapest)
-
-if __name__ == "__main__":
-    check_price()
+        browser.close()
