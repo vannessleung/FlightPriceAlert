@@ -25,81 +25,51 @@ def check_price():
 
         start = 0
         
-        for i, line in enumerate(lines):
-            if "Sorted by" in line:
-                start = i
-                break
-        flight_lines = lines[start:]
+        for i, line in enumerate(card):
 
-        cards = []
-        current = []
-        flights = []
-        for line in flight_lines:
-            current.append(line)
-            if line.startswith("Avoids"):
-                cards.append(current)
-                current = []
-        for card in cards:
+            price_match = re.search(r'£\d{1,3}(?:,\d{3})*', line)
 
-            flight = {
-
-                "airline": None,
-
-                "route": None,
-
-                "stops": None,
-
-                "duration": None,
-
-                "price": None
-
-            }
-
-            for i, line in enumerate(card):
-
-                price_match = re.search(r'£\d{1,3}(?:,\d{3})*', line)
-                if price_match:
-                    flight["price"] = int(price_match.group().replace("£", "").replace(",", ""))
-
-                elif "hrs" in line:
-
-                    flight["duration"] = line
-
-                elif "LHR" in line or "HND" in line or "–" in line:
+            if price_match:
         
-                    flight["route"] = line
+                flight["price"] = int(price_match.group().replace("£", "").replace(",", ""))
 
-                elif "stop" in line.lower():
+            elif "hrs" in line:
 
-                    flight["stops"] = line
+                flight["duration"] = line
 
-        # airline heuristic (important)
+            elif "LHR" in line or "HND" in line or "–" in line:
 
-                elif (
+                flight["route"] = line
 
-                    "£" not in line and
+            elif "stop" in line.lower():
 
-                    "hrs" not in line and
+                flight["stops"] = line
 
-                    "stop" not in line.lower() and
+            elif (
 
-                    "–" not in line and
-
-                    "CO2" not in line and
-
-                    len(line) < 40
-
-                ):
-
-                    if flight["airline"] is None:
-
-                        flight["airline"] = line
-
-                print(flight)
-
-            flights.append(flight)
+                "£" not in line and
         
+                "hrs" not in line and
 
+                "stop" not in line.lower() and
+
+                "–" not in line and
+
+                "CO2" not in line and
+
+                len(line) < 40
+
+            ):
+
+                if flight["airline"] is None:
+
+                    flight["airline"] = line
+
+# 👇 THIS is where it should go
+
+        print(flight)
+
+        flights.append(flight)
 
         with open("page.txt", "w", encoding="utf-8") as f:
             f.write(text)
