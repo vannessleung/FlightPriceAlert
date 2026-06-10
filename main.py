@@ -1,7 +1,7 @@
 import re
 from playwright.sync_api import sync_playwright
 
-BASE_URL = "https://www.google.com/travel/flights/search?tfs=CBwQAhosEgoyMDI2LTEyLTI0KAFgsAlqBwgBEgNMSFJyDAgDEggvbS8wN2Rma5AB6AIaLBIKMjAyNy0wMS0xOCgBYLAJagwIAxIIL20vMDdkZmtyBwgBEgNMSFKQAegCQAFAAUABSAFwAYIBCwj___________8BmAEB&tfu=EggIAhABIAIoAyIA&hl=en-GB&gl=GB&curr=GBP"
+BASE_URL = "https://www.google.com/travel/flights/search?tfs=CBwQAhonEgoyMDI2LTEyLTI0KAFgqApqBwgBEgNMSFJyBwgBEgNITkSQAYYDGicSCjIwMjctMDEtMTgoAWCoCmoHCAESA0hORHIHCAESA0xIUpABhgNAAUABQAFIAXABggELCP___________wGYAQE&tfu=EgoIABAAGAAgAigB"
 
 
 def extract_price(line):
@@ -182,7 +182,7 @@ with sync_playwright() as p:
         page.wait_for_timeout(2000)
 
         # open return date picker (robust way)
-        page.get_by_label("Return").click()
+        page.click('div[data-value="2027-01-18"]')
 
         # select date using stable attribute
         page.click(f'div[data-value="{date}"]')
