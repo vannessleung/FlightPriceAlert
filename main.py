@@ -67,6 +67,9 @@ def check_price():
 
             flight = {
                 "airline": None,
+                "airline": None,
+                "departure": None,
+                "arrival": None,
                 "route": None,
                 "stops": None,
                 "duration": None,
