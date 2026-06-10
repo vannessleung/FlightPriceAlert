@@ -87,7 +87,7 @@ def check_price():
                     continue
 
                 # 2. TIME (this is the key fix)
-                if time_pattern.fullmatch(line):
+                if re.match(r"\d{2}:\d{2}", line):
                     if "departure" not in flight:
                         flight["departure"] = line
                     else:
