@@ -107,8 +107,8 @@ def check_price():
 
         flights.sort(key=lambda x: x["price"])
 
-        print("\n===== ALL FLIGHTS =====")
-        for f in flights:
+        print("\n===== TOP 3 FLIGHTS =====")
+        for f in flights[:3]:
             print(f)
 
         if flights:
