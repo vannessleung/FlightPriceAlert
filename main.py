@@ -25,7 +25,7 @@ def check_price():
 
         start = 0
         
-        for i, line in enumerate(card):
+        for i, line in enumerate(cards):
 
             price_match = re.search(r'£\d{1,3}(?:,\d{3})*', line)
 
