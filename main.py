@@ -88,7 +88,7 @@ def check_price():
 
                 # 2. TIME (this is the key fix)
                 if re.match(r"\d{2}:\d{2}", line):
-                    if "departure" not in flight:
+                    if flight["departure"] is None:
                         flight["departure"] = line
                     else:
                         flight["arrival"] = line
