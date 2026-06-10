@@ -162,18 +162,20 @@ def check_prices():
     PRICE_ALERT = 1700
             
     with open("results.txt", "w", encoding="utf-8") as f:
+        # Alert check
         if all_flights and all_flights[0]["price"] < PRICE_ALERT:
-            f.write(f"🚨 OH MY GOD WE NEED TO FLY NOW 🚨\n")
+            f.write("🚨 OH MY GOD WE NEED TO FLY NOW 🚨\n")
             f.write(f"Cheapest flight is £{all_flights[0]['price']} — below your £{PRICE_ALERT} threshold!\n\n")
+
         f.write("===== TOP 5 CHEAPEST ACROSS ALL DATES =====\n")
         for flight in all_flights[:5]:
-            f.write(f"£{flight['price']} — {flight['airline']} ({flight['stops'] or 'direct'}) | Return: {flight['return_date']}\n")
+            f.write(format_flight(flight) + "\n")
 
         f.write("\n===== TOP 3 CHEAPEST PER RETURN DATE =====\n")
         for d in sorted(by_date):
             f.write(f"\n{d}:\n")
             for flight in by_date[d][:3]:
-                f.write(f"  £{flight['price']} — {flight['airline']} ({flight['stops'] or 'direct'})\n")
+                f.write(format_flight(flight) + "\n")
 
     print("\n===== CHEAPEST PER RETURN DATE =====")
     seen = {}
@@ -182,6 +184,24 @@ def check_prices():
             seen[f["return_date"]] = f
     for d in sorted(seen):
         print(f"  {d}: £{seen[d]['price']} — {seen[d]['airline']}")
+
+
+def format_flight(f):
+    lines = []
+    lines.append(f"  💰 £{f['price']} — {f['airline'] or 'Unknown airline'}")
+    lines.append(f"  📅 Return: {f['return_date']}")
+    if f['departure'] and f['arrival']:
+        lines.append(f"  🕐 {f['departure']} → {f['arrival']}")
+    if f['duration']:
+        lines.append(f"  ⏱  Total duration: {f['duration']}")
+    if f['stops']:
+        lines.append(f"  🔁 {f['stops']}")
+    if f['transfer']:
+        lines.append(f"  ✈  Via: {f['transfer']}")
+    if f['route']:
+        lines.append(f"  🗺  Route: {f['route']}")
+    lines.append("")  # blank line between flights
+    return "\n".join(lines)
     
 
 
