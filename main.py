@@ -31,7 +31,7 @@ def check_price():
             if "Fetching results" in line:
                 start = i
                 break
-        flihgt_lines = lines[start:]
+        flight_lines = lines[start:]
 
         cards = []
         current = []
@@ -40,14 +40,63 @@ def check_price():
             if line.startswith("Avoids"):
                 cards.append(current)
                 current = []
-        if line.startswith("£"):
-            print("PRICES:", line)
-        if "-" in line and len(line)<10:
-            print("Airport:", line)
-        if "hrs" in line:
-            print("Flight duration:", line)
-        if "stop" in line:
-            print(line)
+for card in cards:
+
+    flight = {
+
+        "airline": None,
+
+        "route": None,
+
+        "stops": None,
+
+        "duration": None,
+
+        "price": None
+
+    }
+
+    for i, line in enumerate(card):
+
+        if "£" in line:
+
+            flight["price"] = int(line.replace("£", "").replace(",", ""))
+
+        elif "hrs" in line:
+
+            flight["duration"] = line
+
+        elif "LHR" in line or "HND" in line or "–" in line:
+
+            flight["route"] = line
+
+        elif "stop" in line.lower():
+
+            flight["stops"] = line
+
+        # airline heuristic (important)
+
+        elif (
+
+            "£" not in line and
+
+            "hrs" not in line and
+
+            "stop" not in line.lower() and
+
+            "–" not in line and
+
+            "CO2" not in line and
+
+            len(line) < 40
+
+        ):
+
+            if flight["airline"] is None:
+
+                flight["airline"] = line
+
+    flights.append(flight)
         
 
         print(prices)
