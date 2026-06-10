@@ -151,7 +151,14 @@ def check_prices():
 
         browser.close()
 
-    all_flights.sort(key=lambda x: x["price"])
+   all_flights.sort(key=lambda x: x["price"])
+
+    # Build by_date dict
+    from collections import defaultdict
+    by_date = defaultdict(list)
+    for f in all_flights:
+        by_date[f["return_date"]].append(f)
+
     with open("results.txt", "w", encoding="utf-8") as f:
         f.write("===== TOP 5 CHEAPEST ACROSS ALL DATES =====\n")
         for flight in all_flights[:5]:
