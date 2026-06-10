@@ -44,11 +44,17 @@ def check_price():
         # =========================
         cards = []
         current = []
-
+        started = False
+        
         for line in cleaned:
+            if re.match(r"\d{2}:\d{2}", line):
+                started = True
+            if not started:
+                continue
+                
             current.append(line)
 
-            if "Avoid" in line or "trees absorb" in line:
+            if "round trip" in line:
                 cards.append(current)
                 current = []
 
