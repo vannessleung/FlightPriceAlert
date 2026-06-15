@@ -2,7 +2,7 @@ name: FlightPriceAlert
 
 on:
   schedule:
-    - cron: "0 9 * * 1"  # runs daily at 9am UTC
+    - cron: "0 9 * * *"  # runs daily at 9am UTC
   workflow_dispatch:
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
